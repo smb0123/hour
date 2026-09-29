@@ -1,0 +1,210 @@
+@import url("https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap");
+
+:root {
+  --bg: #eef2f4;
+  --card: #fff;
+  --ink: #1f2d33;
+  --sub: #6b7c85;
+  --line: #dde5e9;
+  --acc: #1f6f78;
+  --we: #f5f8f9;
+  --sun: #c0473d;
+  --sat: #3d6fc0;
+  --edit: #fff1cc;
+  --zero: #b5c2c8;
+  --warn: #c0473d;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #14201f;
+    --card: #1c2b2b;
+    --ink: #e6eeee;
+    --sub: #95a9a9;
+    --line: #2c3f3f;
+    --acc: #5cc0c8;
+    --we: #213333;
+    --sun: #ee8a80;
+    --sat: #88aaee;
+    --edit: #4a4020;
+    --zero: #4f6565;
+    --warn: #ee8a80;
+  }
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: "Noto Sans KR", system-ui, sans-serif;
+  line-height: 1.5;
+}
+
+.wrap {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 24px 16px;
+}
+
+header {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: 16px;
+}
+
+h1 {
+  font-size: 24px;
+  margin: 0 0 4px;
+  font-weight: 700;
+}
+
+p.d {
+  margin: 0;
+  color: var(--sub);
+  font-size: 14px;
+}
+
+button {
+  font: inherit;
+  font-size: 14px;
+  padding: 8px 14px;
+  border-radius: 8px;
+  border: 1px solid var(--acc);
+  background: transparent;
+  color: var(--acc);
+  cursor: pointer;
+}
+
+button:hover {
+  background: var(--acc);
+  color: var(--card);
+}
+
+button:focus-visible,
+input:focus-visible {
+  outline: 2px solid var(--acc);
+  outline-offset: 1px;
+}
+
+.box {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  overflow-x: auto;
+  max-width: 100%;
+}
+
+table {
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: 14px;
+}
+
+th,
+td {
+  padding: 0;
+  border-bottom: 1px solid var(--line);
+  border-right: 1px solid var(--line);
+  text-align: center;
+  min-width: 42px;
+}
+
+th {
+  padding: 6px 2px;
+  font-weight: 500;
+  background: var(--card);
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
+th .n {
+  display: block;
+  font-size: 15px;
+}
+
+th .w {
+  display: block;
+  font-size: 12px;
+  color: var(--sub);
+}
+
+th.sun .w,
+th.sun .n {
+  color: var(--sun);
+}
+
+th.sat .w,
+th.sat .n {
+  color: var(--sat);
+}
+
+.nm {
+  position: sticky;
+  left: 0;
+  z-index: 2;
+  background: var(--card);
+  min-width: 84px;
+  padding: 0 12px;
+  text-align: left;
+  font-weight: 700;
+  border-right: 2px solid var(--line);
+}
+
+th.nm {
+  z-index: 3;
+}
+
+td.we {
+  background: var(--we);
+}
+
+td.ed {
+  background: var(--edit);
+}
+
+td input {
+  width: 100%;
+  box-sizing: border-box;
+  border: 0;
+  background: transparent;
+  color: var(--ink);
+  text-align: center;
+  font: inherit;
+  padding: 12px 0;
+}
+
+td input.z {
+  color: var(--zero);
+}
+
+td.mx {
+  min-width: 96px;
+  padding: 0 10px;
+  font-weight: 700;
+  border-right: 0;
+}
+
+td.mx.hi {
+  color: var(--warn);
+}
+
+.note {
+  margin: 14px 2px 0;
+  font-size: 13px;
+  color: var(--sub);
+}
+
+.note b {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  background: var(--edit);
+  border: 1px solid var(--line);
+  vertical-align: -1px;
+  border-radius: 3px;
+  margin-right: 4px;
+}
