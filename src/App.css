@@ -13,6 +13,8 @@
   --edit: #fff1cc;
   --zero: #b5c2c8;
   --warn: #c0473d;
+  --hl-ink: #b3541e;
+  --hl-bg: #ffe4c2;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -29,6 +31,8 @@
     --edit: #4a4020;
     --zero: #4f6565;
     --warn: #ee8a80;
+    --hl-ink: #ffb37a;
+    --hl-bg: #4a3016;
   }
 }
 
@@ -109,7 +113,7 @@ td {
   border-bottom: 1px solid var(--line);
   border-right: 1px solid var(--line);
   text-align: center;
-  min-width: 42px;
+  min-width: 50px;
 }
 
 th {
@@ -123,7 +127,8 @@ th {
 
 th .n {
   display: block;
-  font-size: 15px;
+  font-size: 13px;
+  letter-spacing: -0.2px;
 }
 
 th .w {
@@ -160,6 +165,21 @@ th.nm {
 
 td.we {
   background: var(--we);
+}
+
+th.hl {
+  background: var(--hl-bg);
+  box-shadow: inset 0 -3px 0 var(--hl-ink);
+}
+
+th.hl .n,
+th.hl .w {
+  color: var(--hl-ink);
+  font-weight: 700;
+}
+
+td.hl {
+  background: var(--hl-bg);
 }
 
 td.ed {
@@ -202,9 +222,17 @@ td.mx.hi {
   display: inline-block;
   width: 12px;
   height: 12px;
-  background: var(--edit);
   border: 1px solid var(--line);
   vertical-align: -1px;
   border-radius: 3px;
   margin-right: 4px;
+}
+
+.note b.b-edit {
+  background: var(--edit);
+}
+
+.note b.b-hl {
+  background: var(--hl-bg);
+  box-shadow: inset 0 -2px 0 var(--hl-ink);
 }

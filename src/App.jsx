@@ -6,6 +6,13 @@ const DAYS = 35;
 const WD = ["일", "월", "화", "수", "목", "금", "토"];
 // 엑셀 날짜: 27, 28, 29, 30, 1, 2, ... (월 구분 없이 이어서 표시)
 const DATES = Array.from({ length: DAYS }, (_, i) => (i < 4 ? 27 + i : i - 3));
+const MONTHS = Array.from({ length: DAYS }, (_, i) => (i < 4 ? 9 : 10));
+// 눈에 띄게 표시할 날짜 (월-일 쌍으로 지정)
+const HIGHLIGHT_DATES = new Set([
+  "9-27",
+  "10-3", "10-4", "10-5", "10-9", "10-10", "10-11", "10-17", "10-24", "10-31",
+]);
+const isHighlight = (i) => HIGHLIGHT_DATES.has(`${MONTHS[i]}-${DATES[i]}`);
 
 // 엑셀 원본 (새로고침하면 이 값으로 돌아옴)
 const ORIGINAL = [
@@ -82,16 +89,16 @@ export default function App() {
           <thead>
             <tr>
               <th className="nm">이름</th>
-              {DATES.map((d, i) => (
-                <th key={i} className={i % 7 === 0 ? "sun" : i % 7 === 6 ? "sat" : ""}>
-                  <span className="n">{d}</span>
-                  <span className="w">{WD[i % 7]}</span>
-                </th>
-              ))}
-              <th>
-                <span className="n">최대</span>
-                <span className="w">연속 7일</span>
-              </th>
+              {DATES.map((d, i) => {
+                const weekCls = i % 7 === 0 ? "sun" : i % 7 === 6 ? "sat" : "";
+                const hlCls = isHighlight(i) ? " hl" : "";
+                return (
+                  <th key={i} className={weekCls + hlCls}>
+                    <span className="n">{MONTHS[i]}/{d}</span>
+                    <span className="w">{WD[i % 7]}</span>
+                  </th>
+                );
+              })}
             </tr>
           </thead>
           <tbody>
@@ -103,33 +110,26 @@ export default function App() {
                   {v.map((n, c) => {
                     const weekend = c % 7 === 0 || c % 7 === 6;
                     const edited = n !== ORIGINAL[r][1][c];
+                    const hl = isHighlight(c);
                     return (
-                      <td key={c} className={`${weekend ? "we " : ""}${edited ? "ed" : ""}`}>
+                      <td key={c} className={`${weekend ? "we " : ""}${hl ? "hl " : ""}${edited ? "ed" : ""}`}>
                         <input
                           value={n}
                           inputMode="numeric"
                           className={n === 0 ? "z" : ""}
-                          aria-label={`${ORIGINAL[r][0]} ${DATES[c]}일 근무시간`}
+                          aria-label={`${ORIGINAL[r][0]} ${MONTHS[c]}월 ${DATES[c]}일 근무시간`}
                           onFocus={(e) => e.target.select()}
                           onChange={(e) => change(r, c, e.target.value)}
                         />
                       </td>
                     );
                   })}
-                  <td className={`mx${w >= 48 ? " hi" : ""}`}>
-                    {w} / {LIMIT}h
-                  </td>
                 </tr>
               );
             })}
           </tbody>
         </table>
       </div>
-
-      <p className="note">
-        <b />
-        엑셀 원본에서 수정한 칸 · 새로고침하면 원본으로 돌아갑니다.
-      </p>
     </div>
   );
 }
