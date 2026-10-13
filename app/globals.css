@@ -10,6 +10,8 @@
   --sat: #3d6fc0;
   --zero: #b5c2c8;
   --warn: #c0473d;
+  --red-bg: #fbd5d0;
+  --blue-bg: #d3e2fa;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -25,6 +27,8 @@
     --sat: #88aaee;
     --zero: #4f6565;
     --warn: #ee8a80;
+    --red-bg: #4f2a27;
+    --blue-bg: #243551;
   }
 }
 
@@ -84,8 +88,12 @@ th {
 }
 th .n { display: block; font-size: 13px; letter-spacing: -0.2px; }
 th .w { display: block; font-size: 12px; color: var(--sub); }
-th.sun .w, th.sun .n { color: var(--sun); }
-th.sat .w, th.sat .n { color: var(--sat); }
+th .h { display: block; font-size: 10px; line-height: 14px; min-height: 14px; color: var(--sub); }
+
+th.h-red { background: var(--red-bg); box-shadow: inset 0 -3px 0 var(--sun); }
+th.h-red .n, th.h-red .w, th.h-red .h { color: var(--sun); font-weight: 700; }
+th.h-blue { background: var(--blue-bg); box-shadow: inset 0 -3px 0 var(--sat); }
+th.h-blue .n, th.h-blue .w, th.h-blue .h { color: var(--sat); font-weight: 700; }
 
 .nm {
   position: sticky; left: 0; z-index: 2; background: var(--card);
@@ -94,7 +102,8 @@ th.sat .w, th.sat .n { color: var(--sat); }
 }
 th.nm { z-index: 3; }
 
-td.we { background: var(--we); }
+td.c-red { background: var(--red-bg); }
+td.c-blue { background: var(--blue-bg); }
 
 td input {
   width: 100%; border: 0; background: transparent; color: var(--ink);
@@ -112,3 +121,7 @@ button.x { color: var(--sub); font-size: 16px; line-height: 1; }
 button.x:hover { background: transparent; color: var(--warn); }
 
 .note { margin: 14px 2px 0; font-size: 13px; color: var(--sub); }
+
+.note b { display: inline-block; width: 12px; height: 12px; border-radius: 3px; vertical-align: -1px; margin: 0 4px 0 8px; }
+.note b.sw-red { background: var(--red-bg); box-shadow: inset 0 -2px 0 var(--sun); }
+.note b.sw-blue { background: var(--blue-bg); box-shadow: inset 0 -2px 0 var(--sat); }

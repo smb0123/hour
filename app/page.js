@@ -2,9 +2,14 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { dayCount, dayRange, weekday } from "@/lib/hours";
+import { HOLIDAYS } from "@/lib/holidays";
 
 const WD = ["일", "월", "화", "수", "목", "금", "토"];
 const MAX_DAYS = 93;
+
+// 일요일·공휴일은 빨강, 토요일은 파랑 (토요일이 공휴일이면 빨강)
+const dayKind = (d) =>
+  HOLIDAYS[d] || weekday(d) === 0 ? "red" : weekday(d) === 6 ? "blue" : "";
 
 const iso = (d) =>
   `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
@@ -190,14 +195,15 @@ export default function Page() {
               <tr>
                 <th className="nm">이름</th>
                 {days.map((d) => {
-                  const w = weekday(d);
-                  const cls = w === 0 ? "sun" : w === 6 ? "sat" : "";
+                  const k = dayKind(d);
+                  const hol = HOLIDAYS[d];
                   return (
-                    <th key={d} className={cls}>
+                    <th key={d} className={k ? `h-${k}` : ""} title={hol || undefined}>
                       <span className="n">
                         {Number(d.slice(5, 7))}/{Number(d.slice(8, 10))}
                       </span>
-                      <span className="w">{WD[w]}</span>
+                      <span className="w">{WD[weekday(d)]}</span>
+                      <span className="h">{hol ? "공휴" : ""}</span>
                     </th>
                   );
                 })}
@@ -217,10 +223,10 @@ export default function Page() {
                     </span>
                   </td>
                   {days.map((d) => {
-                    const w = weekday(d);
+                    const k = dayKind(d);
                     const val = hours[u.id]?.[d] ?? 0;
                     return (
-                      <td key={d} className={w === 0 || w === 6 ? "we" : ""}>
+                      <td key={d} className={k ? `c-${k}` : ""} title={HOLIDAYS[d] || undefined}>
                         <Cell
                           value={val}
                           label={`${u.name} ${d} 근무시간`}
@@ -236,7 +242,9 @@ export default function Page() {
         </div>
       )}
 
-      <p className="note">이름을 누르면 변경, × 를 누르면 삭제됩니다. 입력한 값은 바로 DB에 저장돼요.</p>
+      <p className="note">
+        <b className="sw-red" /> 일요일·공휴일 <b className="sw-blue" /> 토요일 &nbsp;|&nbsp; 이름을 누르면 변경, × 를 누르면 삭제됩니다. 입력한 값은 바로 DB에 저장돼요.
+      </p>
     </div>
   );
 }
