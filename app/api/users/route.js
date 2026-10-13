@@ -1,9 +1,12 @@
 import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
+import { requireUser } from "@/lib/guard";
 
 export const dynamic = "force-dynamic";
 
 export async function GET() {
+  const { res: denied } = await requireUser();
+  if (denied) return denied;
   const c = await db();
   const r = await c.execute("SELECT id, name FROM users ORDER BY id");
   return NextResponse.json(
@@ -12,6 +15,8 @@ export async function GET() {
 }
 
 export async function POST(req) {
+  const { res: denied } = await requireUser();
+  if (denied) return denied;
   const body = await req.json().catch(() => ({}));
   const name = String(body.name ?? "").trim();
   if (!name || name.length > 20) {

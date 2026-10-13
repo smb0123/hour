@@ -21,6 +21,10 @@ async function api(url, opts) {
     ...opts,
   });
   const data = await res.json().catch(() => ({}));
+  if (res.status === 401) {
+    window.location.href = "/login";
+    throw new Error(data.error || "로그인이 필요합니다.");
+  }
   if (!res.ok) throw new Error(data.error || "요청에 실패했습니다.");
   return data;
 }
@@ -59,6 +63,7 @@ export default function Page() {
   const [from, setFrom] = useState("");
   const [to, setTo] = useState("");
   const [name, setName] = useState("");
+  const [me, setMe] = useState("");
   const [loading, setLoading] = useState(true);
 
   // 기본 기간: 이번 달
@@ -74,10 +79,12 @@ export default function Page() {
   const load = useCallback(async () => {
     if (!valid) return;
     try {
-      const [u, h] = await Promise.all([
+      const [u, h, m] = await Promise.all([
         api("/api/users"),
         api(`/api/hours?from=${from}&to=${to}`),
+        api("/api/auth/me"),
       ]);
+      setMe(m.username);
       setUsers(u);
       setHours(h);
     } catch (e) {
@@ -90,6 +97,11 @@ export default function Page() {
   useEffect(() => {
     load();
   }, [load]);
+
+  async function logout() {
+    await fetch("/api/auth/logout", { method: "POST" });
+    window.location.href = "/login";
+  }
 
   async function addUser(e) {
     e.preventDefault();
@@ -149,6 +161,10 @@ export default function Page() {
 
   return (
     <div className="wrap">
+      <div className="acct">
+        {me && <span>{me} 님</span>}
+        <button onClick={logout}>로그아웃</button>
+      </div>
       <header>
         <div>
           <h1>근무시간 관리</h1>

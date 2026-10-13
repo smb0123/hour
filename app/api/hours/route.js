@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
+import { requireUser } from "@/lib/guard";
 import { LIMIT, isDate, dayCount, worstAround } from "@/lib/hours";
 
 export const dynamic = "force-dynamic";
@@ -10,6 +11,8 @@ const md = (s) => `${Number(s.slice(5, 7))}/${Number(s.slice(8, 10))}`;
 
 // GET /api/hours?from=YYYY-MM-DD&to=YYYY-MM-DD  ->  { [userId]: { [date]: hours } }
 export async function GET(req) {
+  const { res: denied } = await requireUser();
+  if (denied) return denied;
   const sp = new URL(req.url).searchParams;
   const from = sp.get("from");
   const to = sp.get("to");
@@ -35,6 +38,8 @@ export async function GET(req) {
 
 // PUT { userId, date, hours }
 export async function PUT(req) {
+  const { res: denied } = await requireUser();
+  if (denied) return denied;
   const body = await req.json().catch(() => ({}));
   const userId = Number(body.userId);
   const { date } = body;

@@ -1,9 +1,12 @@
 import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
+import { requireUser } from "@/lib/guard";
 
 export const dynamic = "force-dynamic";
 
 export async function PUT(req, { params }) {
+  const { res: denied } = await requireUser();
+  if (denied) return denied;
   const { id } = await params;
   const body = await req.json().catch(() => ({}));
   const name = String(body.name ?? "").trim();
@@ -22,6 +25,8 @@ export async function PUT(req, { params }) {
 }
 
 export async function DELETE(_req, { params }) {
+  const { res: denied } = await requireUser();
+  if (denied) return denied;
   const { id } = await params;
   const c = await db();
   await c.batch(
