@@ -56,6 +56,15 @@ export async function POST(req) {
     return fail("이미 사용 중인 아이디입니다.", 409);
   }
 
+  // 첫 번째 계정이면, 주인 없는 기존 근무자를 이 계정에 배정
+  const cnt = await c.execute("SELECT COUNT(*) AS n FROM accounts");
+  if (Number(cnt.rows[0].n) === 1) {
+    await c.execute({
+      sql: "UPDATE users SET owner_id = ? WHERE owner_id IS NULL",
+      args: [id],
+    });
+  }
+
   await clearFails(key);
   const res = NextResponse.json({ username }, { status: 201 });
   res.cookies.set(COOKIE, await createToken({ id, username }), cookieOptions);

@@ -11,7 +11,7 @@ const md = (s) => `${Number(s.slice(5, 7))}/${Number(s.slice(8, 10))}`;
 
 // GET /api/hours?from=YYYY-MM-DD&to=YYYY-MM-DD  ->  { [userId]: { [date]: hours } }
 export async function GET(req) {
-  const { res: denied } = await requireUser();
+  const { user: me, res: denied } = await requireUser();
   if (denied) return denied;
   const sp = new URL(req.url).searchParams;
   const from = sp.get("from");
@@ -25,8 +25,10 @@ export async function GET(req) {
 
   const c = await db();
   const r = await c.execute({
-    sql: "SELECT user_id, date, hours FROM hours WHERE date BETWEEN ? AND ?",
-    args: [from, to],
+    sql: `SELECT h.user_id, h.date, h.hours
+            FROM hours h JOIN users u ON u.id = h.user_id
+           WHERE u.owner_id = ? AND h.date BETWEEN ? AND ?`,
+    args: [me.id, from, to],
   });
   const out = {};
   for (const row of r.rows) {
@@ -38,7 +40,7 @@ export async function GET(req) {
 
 // PUT { userId, date, hours }
 export async function PUT(req) {
-  const { res: denied } = await requireUser();
+  const { user: me, res: denied } = await requireUser();
   if (denied) return denied;
   const body = await req.json().catch(() => ({}));
   const userId = Number(body.userId);
@@ -53,8 +55,8 @@ export async function PUT(req) {
 
   const c = await db();
   const u = await c.execute({
-    sql: "SELECT name FROM users WHERE id = ?",
-    args: [userId],
+    sql: "SELECT name FROM users WHERE id = ? AND owner_id = ?",
+    args: [userId, me.id],
   });
   if (u.rows.length === 0) return bad("존재하지 않는 사용자입니다.");
 
